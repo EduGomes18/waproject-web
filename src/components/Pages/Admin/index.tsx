@@ -7,9 +7,9 @@ import React, { memo, useCallback, useRef, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import DashboardIndexPage from './Dashboard';
+import DemandIndexPage from './Demands';
 import SamplePage from './Sample';
 import UserIndexPage from './Users';
-import DemandIndexPage from './Demands';
 
 export const ScrollTopContext = React.createContext<Function>(() => {});
 

@@ -70,7 +70,12 @@ const ListItem = memo((props: IProps) => {
       <TableCell>{demand.name}</TableCell>
       <TableCell>{demand.description}</TableCell>
       <TableCell>{demand.quantity}</TableCell>
-      <TableCell>{demand.value}</TableCell>
+      <TableCell>
+        {Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(demand.value)}
+      </TableCell>
       <TableCellActions options={options} loading={loading} error={error} onDismissError={handleDismissError} />
     </TableRow>
   );

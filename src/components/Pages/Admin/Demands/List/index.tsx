@@ -104,7 +104,7 @@ const DemandListPage = memo(() => {
                   Quantidade
                 </TableCellSortable>
                 <TableCellSortable paginationParams={params} disabled={loading} onChange={mergeParams} column='value'>
-                  Value
+                  Valor unitário
                 </TableCellSortable>
                 <TableCellActions>
                   <IconButton disabled={loading} onClick={handleRefresh}>

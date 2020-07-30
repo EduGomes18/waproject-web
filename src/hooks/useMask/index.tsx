@@ -6,13 +6,14 @@ import document from './document';
 import money from './money';
 import phone from './phone';
 import zipcode from './zipcode';
+import number from './number';
 
 export interface IMaskFunction {
   apply(value: string | number): string;
   clean(value: string): string | number;
 }
 
-const maskHandlers = { zipcode, phone, document, cpf, cnpj, money };
+const maskHandlers = { zipcode, phone, document, cpf, cnpj, money, number };
 export type Masks = keyof typeof maskHandlers;
 
 export default function useMask(mask: Masks, value: any) {
