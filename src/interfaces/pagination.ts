@@ -5,7 +5,6 @@ export interface IPaginationParams {
   orderBy?: string;
   orderDirection?: 'asc' | 'desc';
 }
-
 export interface IPaginationResponse<T> extends IPaginationParams {
   total: number;
   results: T[];

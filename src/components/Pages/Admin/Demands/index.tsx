@@ -7,8 +7,8 @@ import DemandListPage from './List';
 const DemandIndexPage = memo(() => {
   return (
     <Switch>
-      <Route path='/' component={DemandListPage} />
-      <Route path='/:id' component={DemandForm} />
+      <Route path='/pedidos' exact component={DemandListPage} />
+      <Route path='/pedidos/:id' component={DemandForm} />
     </Switch>
   );
 });

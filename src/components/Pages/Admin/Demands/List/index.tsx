@@ -19,12 +19,15 @@ import usePaginationObservable from 'hooks/usePagination';
 import IDemand from 'interfaces/models/demand';
 import RefreshIcon from 'mdi-react/RefreshIcon';
 import React, { Fragment, memo, useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import demandService from 'services/demand';
 
 import FormDialog from '../FormDialog';
 import ListItem from './ListItem';
 
 const DemandListPage = memo(() => {
+  const history = useHistory();
+
   const [current, setCurrent] = useState<IDemand>();
   const [formOpened, setFormOpened] = useState(false);
 
@@ -41,7 +44,7 @@ const DemandListPage = memo(() => {
 
   const handleEdit = useCallback((current: IDemand) => {
     setCurrent(current);
-    setFormOpened(true);
+    history.push(`/pedidos/${current.id}`);
   }, []);
 
   const formCallback = useCallback(
