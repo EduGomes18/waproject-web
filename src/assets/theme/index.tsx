@@ -10,15 +10,15 @@ const themes: { [key in ThemesTypes]: ReturnType<typeof createMuiTheme> } = {
     palette: {
       type: 'light',
       primary: {
-        light: '#3a5885',
-        main: '#002f58',
-        dark: '#00042f',
+        light: '#66aaff',
+        main: '#54a0ff',
+        dark: '#5481ff',
         contrastText: '#fff'
       },
       secondary: {
-        light: '#ffff53',
-        main: '#ffcc09',
-        dark: '#c79c00',
+        light: '#48ceaa',
+        main: '#1dd1a1',
+        dark: '#13b288',
         contrastText: '#fff'
       }
     },
@@ -30,15 +30,15 @@ const themes: { [key in ThemesTypes]: ReturnType<typeof createMuiTheme> } = {
     palette: {
       type: 'dark',
       primary: {
-        light: '#ffff53',
-        main: '#ffcc09',
-        dark: '#c79c00',
+        light: '#66aaff',
+        main: '#54a0ff',
+        dark: '#5481ff',
         contrastText: '#fff'
       },
       secondary: {
-        light: '#ffff53',
-        main: '#ffcc09',
-        dark: '#c79c00',
+        light: '#48ceaa',
+        main: '#1dd1a1',
+        dark: '#13b288',
         contrastText: '#fff'
       }
     },

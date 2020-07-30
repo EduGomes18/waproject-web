@@ -4,6 +4,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +17,7 @@ import { logError } from 'helpers/rxjs-operators/logError';
 import { useFormikObservable } from 'hooks/useFormikObservable';
 import IDemand from 'interfaces/models/demand';
 import React, { Fragment, memo, useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { tap } from 'rxjs/operators';
 import demandService from 'services/demand';
 import * as yup from 'yup';
@@ -25,10 +26,22 @@ import * as yup from 'yup';
 // import { useCallbackObservable } from 'react-use-observable';
 // import { from } from 'rxjs';
 
+const useStyle = makeStyles(theme => ({
+  cardBody: {
+    padding: theme.spacing(2)
+  },
+  textInput: {
+    width: '100%',
+    border: `2px solid ${theme.palette.secondary.light}`,
+    borderRadius: 8,
+    overflow: 'hidden'
+  },
+  actions: {
+    justifyContent: 'center'
+  }
+}));
 interface IProps {
   demand: IDemand;
-  onComplete: (demand: IDemand) => void;
-  onCancel: () => void;
 }
 
 const validationSchema = yup.object().shape({
@@ -39,52 +52,34 @@ const validationSchema = yup.object().shape({
 });
 
 const DemandForm = memo((props: IProps) => {
-  // const history = useHistory();
+  const classes = useStyle(props);
+  const history = useHistory();
+
+  const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
   const [demand, setDemands] = useState<IDemand>();
 
   const fetchMyAPI = useCallback(async () => {
+    setLoading(true);
     const response = await Axios.get(`http://0.0.0.0:3001/admin/demand/${id}`);
     if (response) {
       setDemands(response.data);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
     fetchMyAPI();
   }, [fetchMyAPI]);
 
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState(false);
-
-  // const [handleDelete] = useCallbackObservable(() => {
-  //   return from(Alert.confirm(`Deseja excluir o pedido ${demand.name}?`)).pipe(
-  //     filter(ok => ok),
-  //     tap(() => setLoading(true)),
-  //     switchMap(() => demandService.delete(demand.id)),
-  //     logError(),
-  //     tap(
-  //       () => {
-  //         Toast.show(`O pedido ${demand.name} foi removido`);
-  //         setLoading(true);
-  //         history.push('/pedidos');
-  //       },
-  //       error => {
-  //         setLoading(false);
-  //         setError(error);
-  //       }
-  //     )
-  //   );
-  // }, []);
-
   const formik = useFormikObservable<IDemand>({
     validationSchema,
     onSubmit(model) {
       return demandService.save(model).pipe(
         tap(demand => {
-          Toast.show(`O novo pedido ${demand.name} foi salvo!`);
-          props.onComplete(demand);
+          Toast.show(`O pedido: ${demand.name} foi salvo!`);
+          history.push('/pedidos');
         }),
         logError(true)
       );
@@ -94,23 +89,25 @@ const DemandForm = memo((props: IProps) => {
     formik.setValues(demand ?? formik.initialValues, false);
   }, [formik, demand]);
 
+  const handleBack = () => {
+    history.push('/pedidos');
+  };
+
   useEffect(() => {
     handleEnter();
   }, [demand]);
 
   return (
     <Fragment>
-      <Toolbar title='Extra' />
+      <Toolbar title='Pedido' />
       <ToolbarTabs>
         <Tabs value={0} color='primary'>
-          <Tab label='Image Cropper' />
-          <Tab label='Nothing' />
+          <Tab label='Editar pedido' />
         </Tabs>
       </ToolbarTabs>
-      <Card>
+      <Card className={classes.cardBody}>
         <>
-          {/* {error && <span>{error}</span>}
-          {loading && <LinearProgress color='primary' />} */}
+          {loading && <LinearProgress color='primary' />}
           {formik.isSubmitting && <LinearProgress color='primary' />}
           <form onSubmit={formik.handleSubmit}>
             <CardContent>
@@ -118,28 +115,54 @@ const DemandForm = memo((props: IProps) => {
                 {demand && demand.name}
               </Typography>
             </CardContent>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField label='Nome' name='name' formik={formik} />
+            <CardContent>
+              <Grid container spacing={6}>
+                <Grid item xs={6} sm={6}>
+                  <TextField label='Nome' className={classes.textInput} name='name' formik={formik} />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField label='Descrição' name='description' formik={formik} />
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    multiline
+                    rows='4'
+                    className={classes.textInput}
+                    label='Descrição'
+                    name='description'
+                    formik={formik}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField mask='number' label='Quantidade' name='quantity' formik={formik} />
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    mask='number'
+                    className={classes.textInput}
+                    label='Quantidade'
+                    name='quantity'
+                    formik={formik}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField mask='money' label='Valor' name='value' formik={formik} />
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={6}>
+                  <TextField mask='money' className={classes.textInput} label='Valor' name='value' formik={formik} />
+                </Grid>
               </Grid>
-            </Grid>
-
+            </CardContent>
             <CardActions>
-              <Button onClick={props.onCancel}>Cancelar</Button>
-              <Button color='primary' variant='contained' type='submit' disabled={formik.isSubmitting}>
-                Salvar
-              </Button>
+              <Grid container>
+                <Grid item xs={6} spacing={3}>
+                  <Grid container spacing={2} className={classes.actions}>
+                    <Button fullWidth onClick={handleBack}>
+                      Voltar
+                    </Button>
+                    <Button fullWidth color='primary' variant='contained' type='submit' disabled={formik.isSubmitting}>
+                      Salvar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
             </CardActions>
           </form>
         </>
