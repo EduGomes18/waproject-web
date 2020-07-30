@@ -1,5 +1,7 @@
 import './assets/global.css';
 import './yupLocale';
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider } from '@material-ui/core/styles';
